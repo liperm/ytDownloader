@@ -17,16 +17,16 @@ SPECIAL_CHARACTERS = "['/\?:.,!~@$%]"
 
 def main():
     while (True):
-        video_url = input('URL do vídeo: ')
-        format = int(input('Formato (áudio[1] vídeo[2]): '))
+        video_url = input('Video URL: ')
+        format = int(input('Format (audio[1] video[2]): '))
 
         if is_playlist(video_url):
-            print('Playlist: Sim')
+            print('Playlist: YES')
             youtube_playlist = Playlist(video_url)
             playlist_process(youtube_playlist, format)
 
         else:
-            print('Playlist: Não')
+            print('Playlist: NO')
             youtube_video = YouTube(
                 video_url, on_progress_callback=on_progress)
             single_file_process(youtube_video, format)
@@ -42,7 +42,6 @@ def is_playlist(video_url):
 
 
 def playlist_process(youtube_playlist, format):
-    print(youtube_playlist)
     for youtube_video in youtube_playlist.videos:
         youtube_video.register_on_progress_callback(on_progress)
         single_file_process(youtube_video, format)
@@ -67,7 +66,7 @@ def get_mp4_video_from_youtube_video(youtube_video):
 
 
 def convert_mp4_in_mp3(mp4_video):
-    print('Convertendo...')
+    print('Converting...')
     video_title = remove_special_characters(mp4_video.title)
     base_path = PATH + video_title
     video_file_path = base_path + '.mp4'
@@ -84,7 +83,7 @@ def convert_mp4_in_mp3(mp4_video):
 
         return
 
-    print(f'Arquivo {video_file_path} não encontrado')
+    print(f'File {video_file_path} not found')
 
 
 def remove_special_characters(string):
