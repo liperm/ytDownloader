@@ -1,9 +1,12 @@
 from pytube import YouTube, Playlist
 from pytube.cli import on_progress
 from moviepy.editor import *
+from enum import Enum
+from dotenv import load_dotenv
 import re
 import os
-from enum import Enum
+
+load_dotenv()
 
 
 class Format (Enum):
@@ -11,7 +14,7 @@ class Format (Enum):
     VIDEO = 2
 
 
-PATH = '/home/felipe/Música/'
+FILE_DESTINATION = os.getenv('FILE_DESTINATION')
 SPECIAL_CHARACTERS = "['/\?:.,!~@$%]"
 
 
@@ -50,7 +53,7 @@ def playlist_process(youtube_playlist, format):
 def single_file_process(youtube_video, format):
     print(f'Título do vídeo: {youtube_video.title}')
     mp4_video = get_mp4_video_from_youtube_video(youtube_video)
-    mp4_video.download(PATH)
+    mp4_video.download(FILE_DESTINATION)
 
     if format == Format.AUDIO.value:
         convert_mp4_in_mp3(mp4_video)
@@ -68,7 +71,7 @@ def get_mp4_video_from_youtube_video(youtube_video):
 def convert_mp4_in_mp3(mp4_video):
     print('Converting...')
     video_title = remove_special_characters(mp4_video.title)
-    base_path = PATH + video_title
+    base_path = FILE_DESTINATION + video_title
     video_file_path = base_path + '.mp4'
     audio_file_path = base_path + '.mp3'
 
