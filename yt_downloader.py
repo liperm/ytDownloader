@@ -51,7 +51,7 @@ def playlist_process(youtube_playlist, format):
 
 
 def single_file_process(youtube_video, format):
-    print(f'Título do vídeo: {youtube_video.title}')
+    print(f'Video title: {youtube_video.title}')
     mp4_video = get_mp4_video_from_youtube_video(youtube_video)
     mp4_video.download(FILE_DESTINATION)
 
