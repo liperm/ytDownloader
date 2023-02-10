@@ -1,3 +1,4 @@
+from datetime import date
 from pytube import YouTube, Playlist
 from pytube.cli import on_progress
 from moviepy.editor import *
@@ -13,8 +14,8 @@ class Format (Enum):
     AUDIO = 1
     VIDEO = 2
 
-
-FILE_DESTINATION = os.getenv('FILE_DESTINATION')
+current_date = date.today()
+FILE_DESTINATION = os.getenv('FILE_DESTINATION') + f'{current_date.day}-{current_date.month}/'
 SPECIAL_CHARACTERS = "['/\?:.,!~$%|#]"
 
 
