@@ -15,7 +15,7 @@ class Format (Enum):
 
 
 FILE_DESTINATION = os.getenv('FILE_DESTINATION')
-SPECIAL_CHARACTERS = "['/\?:.,!~@$%]"
+SPECIAL_CHARACTERS = "['/\?:.,!~$%|#]"
 
 
 def main():
