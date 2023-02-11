@@ -6,8 +6,15 @@ from enum import Enum
 from dotenv import load_dotenv
 import re
 import os
+import logging
 
 load_dotenv()
+formatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s', datefmt='%d-%m-%y')
+handler = logging.FileHandler('history.log')
+handler.setFormatter(formatter)
+logger = logging.getLogger('history')
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 
 class Format (Enum):
@@ -15,11 +22,12 @@ class Format (Enum):
     VIDEO = 2
 
 current_date = date.today()
-FILE_DESTINATION = os.getenv('FILE_DESTINATION') + f'{current_date.day}-{current_date.month}/'
+FILE_DESTINATION = os.getenv('FILE_DESTINATION') + f'{current_date.day}-{current_date.month}-{current_date.year}/'
 SPECIAL_CHARACTERS = "['/\?:.,!~$%|#]"
 
 
 def main():
+    logger.info('#### SESSION STARTED ####')
     while (True):
         video_url = input('Video URL: ')
         format = int(input('Format (audio[1] video[2]): '))
@@ -55,9 +63,13 @@ def single_file_process(youtube_video, format):
     print(f'Video title: {youtube_video.title}')
     mp4_video = get_mp4_video_from_youtube_video(youtube_video)
     mp4_video.download(FILE_DESTINATION)
+    try:
+        if format == Format.AUDIO.value:
+            convert_mp4_in_mp3(mp4_video)
 
-    if format == Format.AUDIO.value:
-        convert_mp4_in_mp3(mp4_video)
+        logger.info(f'{mp4_video.title}: SUCCESS!')
+    except Exception as error:
+        print(error)
 
 
 def get_mp4_video_from_youtube_video(youtube_video):
@@ -87,12 +99,12 @@ def convert_mp4_in_mp3(mp4_video):
 
         return
 
-    print(f'File {video_file_path} not found')
+    logger.error(f'{video_title}: impossible to convert [Not Found]')
+    raise Exception(f'File {video_file_path} not found')
 
 
 def remove_special_characters(string):
     return re.sub(SPECIAL_CHARACTERS, "", string)
-
 
 if __name__ == '__main__':
     main()
