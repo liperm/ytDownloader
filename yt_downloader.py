@@ -6,15 +6,11 @@ from enum import Enum
 from dotenv import load_dotenv
 import re
 import os
-import logging
+from logger import Logger
+
 
 load_dotenv()
-formatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s', datefmt='%d-%m-%y')
-handler = logging.FileHandler('history.log')
-handler.setFormatter(formatter)
-logger = logging.getLogger('history')
-logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
+logger = Logger().get_logger()
 
 
 class Format (Enum):
